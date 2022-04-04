@@ -48,6 +48,8 @@ theme = createTheme(theme, {
           backgroundColor: theme.palette.secondary.main,
           '& svg': {
             fill: 'white',
+            height: '52px',
+            width: '52px',
           },
           '&:hover': {
             backgroundColor: theme.palette.secondary.main,
