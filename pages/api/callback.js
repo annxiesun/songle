@@ -14,13 +14,20 @@ export default function handler(req, res) {
   let { code } = req.query;
   const cookies = new Cookies(req, res);
 
+  const proto =
+  req.headers["x-forwarded-proto"] || req.connection.encrypted
+    ? "https"
+    : "http";
+const host = req.headers.host;
+const url = proto+"://"+host;
+
   axios
     .post(
       "https://accounts.spotify.com/api/token",
       stringify({
         grant_type: "authorization_code",
         code: code,
-        redirect_uri: "http://localhost:3000/api/callback",
+        redirect_uri: `${url}/api/callback`,
       }),
       {
         headers: {
@@ -32,6 +39,7 @@ export default function handler(req, res) {
     .then((response) => {
       //console.log(response.data.access_token);
       cookies.set('refresh_token', response.data.refresh_token);
-      res.send(code);
+      res.redirect('/game')
+      //res.send(code);
     });
 }

@@ -1,11 +1,18 @@
 const { stringify } = require('querystring');
 
 export default function handler(req, res) {
+  const proto =
+    req.headers["x-forwarded-proto"] || req.connection.encrypted
+      ? "https"
+      : "http";
+  const host = req.headers.host;
+  const url = proto+"://"+host;
+
   res.redirect('https://accounts.spotify.com/authorize?' +
   stringify({
     client_id: process.env.CLIENT_ID,
     response_type: 'code',
-    redirect_uri: 'http://localhost:3000/api/callback',
+    redirect_uri: `${url}/api/callback`,
     scope: 'user-top-read',
   }));
 }
