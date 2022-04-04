@@ -11,6 +11,7 @@ export default async function handler(req, res) {
   const cookies = new Cookies(req, res);
   let refresh_token = cookies.get("refresh_token");
   const response = await getTopTracks(refresh_token);
+  if (response === 0) return 0;
   const song = getRandom(number_songs, response.data.items);
   /*
   const { items } = await response.json();

@@ -3,64 +3,48 @@ import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 import ReactPlayer from "react-player";
 import axios from "axios";
+import { useRouter } from "next/router";
 
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
-import OutlinedInput from "@mui/material/OutlinedInput";
 import Container from "@mui/material/Container";
-import IconButton from "@mui/material/IconButton";
 
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 
+import EndScreen from "../ui/endScreen";
+import GameScreen from "../ui/gameScreen";
+
 export default function Game() {
+  const router = useRouter();
+  const [auth, setAuth] = useState(false);
+
   useEffect(() => {
-    axios.get("/api/getSong").then((res) => {
-      setSong(res.data);
-      setLoaded(true);
+    axios.get("/api/refreshToken").then((res) => {
+      if (res.data) {
+        setAuth(true);
+      } else {
+        router.push({pathname: "/api/auth",});
+      }
     });
-    //setRound(localStorage.getItem("round"));
-    console.log(localStorage.getItem("round"));
   }, []);
-  const ref = useRef(null);
-  const [song, setSong] = useState(null);
-  const [playing, setPlaying] = useState(false);
-  const [round, setRound] = useState(0);
-  const [input, setInput] = useState("");
-  const [guesses, setGuesses] = useState(["", "", "", "", ""]);
-  const [loaded, setLoaded] = useState(false);
 
-  const onPlay = () => {
-    setPlaying(true);
-    //console.log(rounds[round]);
-    setTimeout(() => {
-      setPlaying(false);
-      console.log("pause");
-      ref.current.seekTo(0);
-      console.log(ref.current);
-    }, rounds[round]);
-  };
-
-  const onGuess = () => {
-    if (input.toUpperCase === song?.name.toUpperCase()) console.log("win!");
-    setGuesses((guesses) => {
-      const copy = [...guesses];
-      copy[round] = input;
-      return copy;
-    });
-    setRound((prev) => {
-      prev++;
-      //localStorage.setItem("round", round);
-      return prev;
-    });
-  };
-
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
-      onGuess();
+  useEffect(() => {
+    if (auth) {
+      axios.get("/api/getSong").then((res) => {
+        setSong(res.data);
+        setLoaded(true);
+      }).catch(e => {
+        console.log("Not logged in")
+      });
     }
-  }
+  }, [auth]);
 
-  console.log("g", guesses);
+  const ref = useRef(null);
+
+  const [song, setSong] = useState(null);
+  const [loaded, setLoaded] = useState(false);
+  const [done, setDone] = useState(false);
+  const [playing, setPlaying] = useState(false);
+  const [win, setWin] = useState(false);
+
   return (
     <Container
       sx={{
@@ -71,56 +55,34 @@ export default function Game() {
         justifyContent: "center",
       }}
     >
-      <Grid
-        sx={(theme) => ({
-          padding: theme.spacing(4),
-          width: "600px",
-          [theme.breakpoints.down("md")]: {
-            width: "100%",
-          },
-        })}
-        container
-        direction="column"
-        alignItems="center"
-        alignContent="center"
-      >
-        {guesses.map((guess, i) => (
-          <Grid
-            sx={(theme) => ({
-              backgroundColor: theme.palette.primary.light,
-              color: "white",
-              padding: theme.spacing(1),
-              marginBottom: theme.spacing(1),
-              minHeight: "40px",
-              borderRadius: "5px",
-              width: "100%",
-            })}
-            xs={12}
-            key={`guess-${i}`}
-          >
-            {guess}
-          </Grid>
-        ))}
-        <IconButton disabled={!loaded} onClick={() => onPlay()}>
-          <PlayArrowIcon />
-        </IconButton>
-        {/* {<Button onClick={() => setRound(0)}>Reset</Button>} */}
-        {song && (
-          <ReactPlayer
-            ref={ref}
-            height={0}
-            url={song.link}
-            playing={playing}
-            controls
-          />
-        )}
-        <OutlinedInput
-          sx={{ width: "100%" }}
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
+      {!done ? (
+        <GameScreen
+          song={song}
+          loaded={loaded}
+          setPlaying={setPlaying}
+          playerRef={ref}
+          setDone={setDone}
+          setWin={setWin}
         />
-      </Grid>
+      ) : (
+        <EndScreen
+          song={song}
+          loaded={loaded}
+          setPlaying={setPlaying}
+          playerRef={ref}
+          win={win}
+        />
+      )}
+      {song && (
+        <ReactPlayer
+          ref={ref}
+          height={0}
+          width={0}
+          url={song.link}
+          playing={playing}
+          controls
+        />
+      )}
     </Container>
   );
 }

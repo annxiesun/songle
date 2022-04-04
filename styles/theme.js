@@ -10,6 +10,30 @@ let theme = createTheme({
       main: "#209348",
     },
   },
+  typography: {
+    h1: {
+      fontFamily: 'Work Sans',
+      color: 'white',
+    },
+    h2: {
+      fontFamily: 'Work Sans',
+      color: 'white',
+    },
+    h3: {
+      fontFamily: 'Work Sans',
+      fontSize: '24px',
+      fontWeight: 600,
+      color: 'white',
+    },
+    body1: {
+      fontFamily: 'Work Sans',
+      color: 'white',
+    },
+    body2: {
+      fontFamily: 'Work Sans',
+      color: 'white',
+    }
+  }
 });
 
 theme = createTheme(theme, {
@@ -39,6 +63,7 @@ theme = createTheme(theme, {
       },
       styleOverrides: {
         root: {
+          color: 'white',
           transition: '0.5s',
           '&:hover& fieldset': {
             border: `1px ${theme.palette.secondary.main} solid`,
@@ -50,6 +75,7 @@ theme = createTheme(theme, {
           },
           '& fieldset': {
             transition: '0.5s',
+            border: `1px grey solid`,
           }
 
         },

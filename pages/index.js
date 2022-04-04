@@ -4,41 +4,22 @@ import styles from "../styles/Home.module.css";
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 import ReactPlayer from "react-player";
+import { Button } from "@mui/material";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 export default function Home() {
+  const router = useRouter();
   useEffect(() => {
-    axios.get("/api/getSong").then((res) => {
-      setSong(res.data);
+    axios.get("/api/refreshToken").then((res) => {
+      if (res.data) {
+        router.push({pathname: "/game",});
+      } else {
+        return;
+      }
     });
-    //setRound(localStorage.getItem("round"));
-    console.log(localStorage.getItem("round"));
   }, []);
-  const ref = useRef(null);
-  const [song, setSong] = useState(null);
-  const [playing, setPlaying] = useState(false);
-  const [round, setRound] = useState(0);
-  const [input, setInput] = useState("");
 
-  const onPlay = () => {
-    setPlaying(true);
-    //console.log(rounds[round]);
-    setTimeout(() => {
-      setPlaying(false);
-      console.log("pause");
-      ref.current.seekTo(0);
-      console.log(ref.current);
-    }, rounds[round]);
-  };
-
-  const onGuess = () => {
-    if (input.toUpperCase === song.name.toUpperCase()) console.log("win!");
-    setRound((prev) => {
-      prev++;
-      //localStorage.setItem("round", round);
-      return prev;
-    });
-  };
   return (
     <div className={styles.container}>
       <Link href="/api/auth">Login</Link>

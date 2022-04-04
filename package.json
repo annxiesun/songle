@@ -20,7 +20,8 @@
     "next": "^12.1.4",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "react-player": "^2.10.0"
+    "react-player": "^2.10.0",
+    "react-transitions": "^1.0.0"
   },
   "devDependencies": {
     "eslint": "8.12.0",
