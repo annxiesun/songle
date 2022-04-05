@@ -12,28 +12,28 @@ let theme = createTheme({
   },
   typography: {
     h1: {
-      fontFamily: 'Work Sans',
-      color: 'white',
+      fontFamily: "Work Sans",
+      color: "white",
     },
     h2: {
-      fontFamily: 'Work Sans',
-      color: 'white',
+      fontFamily: "Work Sans",
+      color: "white",
     },
     h3: {
-      fontFamily: 'Work Sans',
-      fontSize: '24px',
+      fontFamily: "Work Sans",
+      fontSize: "24px",
       fontWeight: 600,
-      color: 'white',
+      color: "white",
     },
     body1: {
-      fontFamily: 'Work Sans',
-      color: 'white',
+      fontFamily: "Work Sans",
+      color: "white",
     },
     body2: {
-      fontFamily: 'Work Sans',
-      color: 'white',
-    }
-  }
+      fontFamily: "Work Sans",
+      color: "white",
+    },
+  },
 });
 
 theme = createTheme(theme, {
@@ -46,40 +46,52 @@ theme = createTheme(theme, {
       styleOverrides: {
         root: {
           backgroundColor: theme.palette.secondary.main,
-          '& svg': {
-            fill: 'white',
-            height: '52px',
-            width: '52px',
+          "& svg": {
+            fill: "white",
+            height: "52px",
+            width: "52px",
           },
-          '&:hover': {
+          "&:hover": {
             backgroundColor: theme.palette.secondary.main,
           },
-          '&.Mui-disabled': {
-            backgroundColor: 'grey',
-          }
+          "&.Mui-disabled": {
+            backgroundColor: "grey",
+          },
         },
       },
     },
     MuiOutlinedInput: {
-      defaultProps: {
-      },
+      defaultProps: {},
       styleOverrides: {
         root: {
-          color: 'white',
-          transition: '0.5s',
-          '&:hover& fieldset': {
+          color: "white",
+          transition: "0.5s",
+          "&:hover& fieldset": {
             border: `1px ${theme.palette.secondary.main} solid`,
-            transition: '0.5s',
+            transition: "0.5s",
           },
-          '&.Mui-focused& fieldset': {
+          "&.Mui-focused& fieldset": {
             border: `1px ${theme.palette.secondary.main} solid`,
-            transition: '0.5s',
+            transition: "0.5s",
           },
-          '& fieldset': {
-            transition: '0.5s',
+          "& fieldset": {
+            transition: "0.5s",
             border: `1px grey solid`,
-          }
-
+          },
+        },
+      },
+    },
+    MuiLinearProgress: {
+      styleOverrides: {
+        root: {
+          "& .MuiLinearProgress-bar": {
+            backgroundColor: theme.palette.secondary.main
+          },
+          "&[aria-valuenow=\"0\"]": {
+            "& .MuiLinearProgress-bar": {
+              transition: "none",
+            },
+          },
         },
       },
     },

@@ -21,19 +21,21 @@ export default function Game() {
       if (res.data) {
         setAuth(true);
       } else {
-        router.push({pathname: "/api/auth",});
+        router.push({ pathname: "/api/auth" });
       }
     });
   }, []);
 
   useEffect(() => {
     if (auth) {
-      axios.get("/api/getSong").then((res) => {
-        setSong(res.data);
-        setLoaded(true);
-      }).catch(e => {
-        console.log("Not logged in")
-      });
+      axios
+        .get("/api/getSong")
+        .then((res) => {
+          setSong(res.data);
+        })
+        .catch((e) => {
+          console.log("Not logged in");
+        });
     }
   }, [auth]);
 
@@ -44,6 +46,18 @@ export default function Game() {
   const [done, setDone] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [win, setWin] = useState(false);
+  const [showEnd, setShowEnd] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [round, setRound] = useState(0);
+
+  useEffect(() => {
+    if (done) {
+      setTimeout(() => {
+        setShowEnd(true);
+        setPlaying(false);
+      }, 3000);
+    }
+  }, [done]);
 
   return (
     <Container
@@ -55,14 +69,20 @@ export default function Game() {
         justifyContent: "center",
       }}
     >
-      {!done ? (
+      {!showEnd ? (
         <GameScreen
           song={song}
           loaded={loaded}
           setPlaying={setPlaying}
           playerRef={ref}
+          done={done}
           setDone={setDone}
           setWin={setWin}
+          playing={playing}
+          progress={progress}
+          setProgress={setProgress}
+          round={round}
+          setRound={setRound}
         />
       ) : (
         <EndScreen
@@ -75,11 +95,17 @@ export default function Game() {
       )}
       {song && (
         <ReactPlayer
+          onReady={() => setLoaded(true)}
           ref={ref}
           height={0}
           width={0}
           url={song.link}
           playing={playing}
+          progressInterval={300}
+          onProgress={() => {
+            setProgress((ref.current.getCurrentTime() / rounds[round]) * 100000);
+            console.log('l', progress)
+          }}
           controls
         />
       )}

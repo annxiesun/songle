@@ -26,8 +26,8 @@ export default async function handler(req, res) {
 
   let artists = "";
 
-  song.artists.forEach((artist) => {
-    artists += artist.name + " ";
+  song.artists.forEach((artist, i) => {
+    artists += artist.name + (i === artists.length - 1 ? ',' : '');
   });
 
   const options = {
