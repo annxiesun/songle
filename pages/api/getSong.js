@@ -32,7 +32,7 @@ export default async function handler(req, res) {
 
   const options = {
     limit: 3,
-    disableConsole: true,
+    //disableConsole: true,
   };
 
   googleIt({ options, query: `soundcloud ${song.name} ${artists}` })
@@ -45,6 +45,6 @@ export default async function handler(req, res) {
       });
     })
     .catch((e) => {
-      // any possible errors that might have occurred (like no Internet connection)
+      console.log(e)
     });
 }

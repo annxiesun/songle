@@ -104,6 +104,7 @@ export default function GameScreen({
       <Grid container>
         {guesses.map((guess, i) => (
           <Grid
+            item
             container
             sx={(theme) => ({
               backgroundColor: `${

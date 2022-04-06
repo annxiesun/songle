@@ -28,14 +28,19 @@ export default function Game() {
 
   useEffect(() => {
     if (auth) {
-      axios
-        .get("/api/getSong")
-        .then((res) => {
-          setSong(res.data);
-        })
-        .catch((e) => {
-          console.log("Not logged in");
-        });
+      if (!localStorage.getItem("song")) {
+        axios
+          .get("/api/getSong")
+          .then((res) => {
+            localStorage.setItem("song", JSON.stringify(res.data));
+            setSong(res.data);
+          })
+          .catch((e) => {
+            console.log("Not logged in");
+          });
+      } else {
+        setSong(JSON.parse(localStorage.getItem("song")))
+      }
     }
   }, [auth]);
 
@@ -103,8 +108,10 @@ export default function Game() {
           playing={playing}
           progressInterval={300}
           onProgress={() => {
-            setProgress((ref.current.getCurrentTime() / rounds[round]) * 100000);
-            console.log('l', progress)
+            setProgress(
+              (ref.current.getCurrentTime() / rounds[round]) * 100000
+            );
+            console.log("l", progress);
           }}
           controls
         />
